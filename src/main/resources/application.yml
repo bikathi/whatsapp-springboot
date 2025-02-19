@@ -1,0 +1,14 @@
+spring:
+  application:
+  name: whatsapp-integration
+  main:
+    allow-bean-definition-overriding: true
+
+server:
+  port: 5500
+
+# custom props
+api:
+  whatsapp:
+    api-key: ${WHATSAPP_API_KEY:abcd12342}
+    phone-number-id: ${PHONE_NUMBER_ID:254743782946}}
