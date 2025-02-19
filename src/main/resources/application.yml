@@ -11,4 +11,4 @@ server:
 api:
   whatsapp:
     api-key: ${WHATSAPP_API_KEY:abcd12342}
-    sender-phone-id: ${PHONE_NUMBER_ID:488062677732676}}
+    sender-phone-id: ${{PHONE_NUMBER_ID:488062677732676}}
