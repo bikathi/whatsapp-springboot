@@ -1,6 +1,7 @@
 package npc.bikathi.whatsappintg.controller;
 
 import com.whatsapp.api.domain.media.FileType;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import npc.bikathi.whatsappintg.types.MediaHandlingService;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +62,21 @@ public class WhatsAppMessagingController {
         }
     }
 
-    @PostMapping(value = "/callback", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void callbackWebhook() {
+    @RequestMapping(value = "/callback", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void callbackWebhook(HttpServletRequest request) {
 
+        // TODO: Temporary -> replace this with real code
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            BufferedReader reader = request.getReader();
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            String requestBody = sb.toString();
+            log.info("Received JSON: {}", requestBody);
+        } catch (IOException e) {
+            log.error("Error reading request body", e);
+        }
     }
 }
