@@ -47,4 +47,5 @@ jobs:
               --name whatsappintg \
               -p 5300:5300 \
               -e "WHATSAPP_API_KEY=${{secrets.WAPI_ACCESS_TOKEN}}" \
+              -e "PHONE_NUMBER_ID=${{secrets.PHONE_NUMBER_ID}}" \
               ${{secrets.DOCKER_USERNAME}}/whatsappintg:latest
