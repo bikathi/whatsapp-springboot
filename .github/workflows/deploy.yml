@@ -41,4 +41,10 @@ jobs:
             docker pull ${{secrets.DOCKER_USERNAME}}/whatsappintg:latest
             docker stop whatsappintg || true
             docker rm whatsappintg || true
-            docker run -d --restart unless-stopped --name whatsappintg -p 5300:5300 ${{secrets.DOCKER_USERNAME}}/whatsappintg:latest
+            docker run \
+              -d \
+              --restart unless-stopped \
+              --name whatsappintg \
+              -p 5300:5300 \
+              -e "WHATSAPP_API_KEY=${{secrets.WAPI_ACCESS_TOKEN}}" \
+              ${{secrets.DOCKER_USERNAME}}/whatsappintg:latest
