@@ -9,4 +9,4 @@ FROM openjdk:17
 WORKDIR /app
 COPY --from=build /app/target/whatsappintg-0.0.1-SNAPSHOT.jar /app/whatsappintg.jar
 EXPOSE 5300
-ENTRYPOINT ["java", "-jar", "whatsappintg.jar"]
+CMD ["java", "-jar", "whatsappintg.jar"]
