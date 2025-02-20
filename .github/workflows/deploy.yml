@@ -49,3 +49,10 @@ jobs:
               -e "WHATSAPP_API_KEY=${{secrets.WAPI_ACCESS_TOKEN}}" \
               -e "SENDER_PHONE_ID=${{secrets.SENDER_PHONE_ID}}" \
               ${{secrets.DOCKER_USERNAME}}/whatsappintg:latest
+      - name: Send email on success
+        if: success()
+        uses: github.actions/send-email@v1
+        with:
+            to: martbikathi@gmail.com
+            subject: Workflow completed successfully!
+            body: Your workflow has completed successfully!
