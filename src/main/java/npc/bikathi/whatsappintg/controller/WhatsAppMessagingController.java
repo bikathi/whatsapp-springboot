@@ -22,6 +22,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/api/v1/messaging/whatsapp")
+@CrossOrigin(origins = { "https://developers.facebook.com/" })
 public class WhatsAppMessagingController {
     private final MessageService whatsAppMessageService;
     private final MediaHandlingService whatsAppMediaStorageService;
@@ -83,9 +84,9 @@ public class WhatsAppMessagingController {
 
     @GetMapping("/webhook")
     public ResponseEntity<String> verifyWebhook(
-            @RequestParam(name = "hub.mode", required = false) String mode,
-            @RequestParam(name = "hub.verify_token", required = false) String token,
-            @RequestParam(name = "hub.challenge", required = false) String challenge
+        @RequestParam(name = "hub.mode", required = false) String mode,
+        @RequestParam(name = "hub.verify_token", required = false) String token,
+        @RequestParam(name = "hub.challenge", required = false) String challenge
     ) {
         final String WEBHOOK_VERIFY_TOKEN = "ELDSRYQG9QXM15XBK9N7";
         if ("subscribe".equals(mode) && WEBHOOK_VERIFY_TOKEN.equals(token)) {
