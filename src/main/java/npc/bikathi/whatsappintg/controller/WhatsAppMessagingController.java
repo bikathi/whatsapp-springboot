@@ -4,6 +4,7 @@ import com.whatsapp.api.domain.media.FileType;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import npc.bikathi.whatsappintg.dto.UserResponse;
 import npc.bikathi.whatsappintg.types.MediaHandlingService;
 import npc.bikathi.whatsappintg.types.MessageService;
 import org.springframework.http.HttpStatus;
@@ -64,22 +65,21 @@ public class WhatsAppMessagingController {
         }
     }
 
-    @PostMapping(value = "/callback", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void callbackWebhook(HttpServletRequest request) {
-
-        // TODO: Temporary -> replace this with real code
+    @PostMapping(value = "/webhook")
+    public ResponseEntity<String> callbackWebhook(@RequestBody UserResponse userResponse) {
+        log.info("Message received from user is: {}", userResponse.getResponse());
         try {
-            StringBuilder sb = new StringBuilder();
-            String line;
-            BufferedReader reader = request.getReader();
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
+            if(!userResponse.getResponse().isBlank() && userResponse.getResponse().contains("from")) {
+                ResponseEntity.status(HttpStatus.OK).body(userResponse.getResponse());
+            } else {
+                return ResponseEntity.noContent().build();
             }
-            String requestBody = sb.toString();
-            log.info("Received JSON: {}", requestBody);
-        } catch (IOException e) {
-            log.error("Error reading request body", e);
+        } catch (Exception e) {
+            log.error("Failed to understand callback data! Cause: {}", e.getMessage());
+            return ResponseEntity.status(500).body(e.getMessage());
         }
+
+        return null;
     }
 
     @GetMapping("/webhook")
@@ -88,6 +88,7 @@ public class WhatsAppMessagingController {
         @RequestParam(name = "hub.verify_token", required = false) String token,
         @RequestParam(name = "hub.challenge", required = false) String challenge
     ) {
+        log.info("Webhook triggered! mode: {}, token: {}, challenge: {}", mode, token, challenge);
         final String WEBHOOK_VERIFY_TOKEN = "ELDSRYQG9QXM15XBK9N7";
         if ("subscribe".equals(mode) && WEBHOOK_VERIFY_TOKEN.equals(token)) {
             System.out.println("Webhook verified successfully!");
