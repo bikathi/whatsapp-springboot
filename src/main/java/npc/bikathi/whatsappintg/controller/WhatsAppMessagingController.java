@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import npc.bikathi.whatsappintg.types.MediaHandlingService;
 import npc.bikathi.whatsappintg.types.MessageService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +33,9 @@ public class WhatsAppMessagingController {
         @RequestPart(name = "photos", required = false) List<MultipartFile> photos
     ) {
         // if there are any front photos, upload them and get back the ids
-       List<String> photoIds = new ArrayList<>();
+        List<String> photoIds = new ArrayList<>();
 
-        if(!Objects.isNull(photos)) {
+        if (!Objects.isNull(photos)) {
             // handle photos
             for (MultipartFile photo : photos) {
                 try {
@@ -48,7 +49,7 @@ public class WhatsAppMessagingController {
 
         // call the appropriate method to send message based on whether there is media
         try {
-            if(!Objects.isNull(photos)) {
+            if (!Objects.isNull(photos)) {
                 whatsAppMessageService.sendMessageWithAttachment(toPhoneNumbers, photoIds, message);
             } else {
                 whatsAppMessageService.sendMessageWithoutAttachment(toPhoneNumbers, message);
@@ -62,7 +63,7 @@ public class WhatsAppMessagingController {
         }
     }
 
-    @RequestMapping(value = "/callback", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/callback", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void callbackWebhook(HttpServletRequest request) {
 
         // TODO: Temporary -> replace this with real code
@@ -77,6 +78,21 @@ public class WhatsAppMessagingController {
             log.info("Received JSON: {}", requestBody);
         } catch (IOException e) {
             log.error("Error reading request body", e);
+        }
+    }
+
+    @GetMapping("/webhook")
+    public ResponseEntity<String> verifyWebhook(
+            @RequestParam(name = "hub.mode", required = false) String mode,
+            @RequestParam(name = "hub.verify_token", required = false) String token,
+            @RequestParam(name = "hub.challenge", required = false) String challenge
+    ) {
+        final String WEBHOOK_VERIFY_TOKEN = "ELDSRYQG9QXM15XBK9N7";
+        if ("subscribe".equals(mode) && WEBHOOK_VERIFY_TOKEN.equals(token)) {
+            System.out.println("Webhook verified successfully!");
+            return ResponseEntity.ok(challenge);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 }
