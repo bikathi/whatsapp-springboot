@@ -1,6 +1,5 @@
 package npc.bikathi.whatsappintg.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import npc.bikathi.whatsappintg.dto.UserResponse;
 import org.springframework.http.HttpStatus;
@@ -27,7 +26,7 @@ public class WhatsAppWebhookController {
         return null;
     }
 
-    @RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/webhook")
+    @GetMapping(value = "/webhook")
     public ResponseEntity<Integer> verifyWebhook(
         @RequestParam(name = "hub.mode", required = false) String mode,
         @RequestParam(name = "hub.verify_token", required = false) String token,
