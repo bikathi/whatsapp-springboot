@@ -28,10 +28,10 @@ public class WhatsAppWebhookController {
     }
 
     @RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/webhook")
-    public ResponseEntity<String> verifyWebhook(
+    public ResponseEntity<Integer> verifyWebhook(
         @RequestParam(name = "hub.mode", required = false) String mode,
         @RequestParam(name = "hub.verify_token", required = false) String token,
-        @RequestParam(name = "hub.challenge", required = false) String challenge
+        @RequestParam(name = "hub.challenge", required = false) Integer challenge
     ) {
         log.info("Webhook triggered! mode: {}, token: {}, challenge: {}", mode, token, challenge);
         final String WEBHOOK_VERIFY_TOKEN = "ELDSRYQG9QXM15XBK9N7";
