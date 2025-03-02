@@ -1,0 +1,13 @@
+package npc.bikathi.whatsappintg.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class RootController {
+
+    @GetMapping("/")
+    public String rootEndpoint() {
+        return "Welcome to the root endpoint!";
+    }
+}
