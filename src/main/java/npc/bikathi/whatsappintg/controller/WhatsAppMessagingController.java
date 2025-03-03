@@ -1,19 +1,15 @@
 package npc.bikathi.whatsappintg.controller;
 
 import com.whatsapp.api.domain.media.FileType;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import npc.bikathi.whatsappintg.dto.UserResponse;
 import npc.bikathi.whatsappintg.types.MediaHandlingService;
 import npc.bikathi.whatsappintg.types.MessageService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +19,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/api/v1/messaging/whatsapp")
-@CrossOrigin(origins = { "https://developers.facebook.com/" })
+@CrossOrigin(origins = {})
 public class WhatsAppMessagingController {
     private final MessageService whatsAppMessageService;
     private final MediaHandlingService whatsAppMediaStorageService;
