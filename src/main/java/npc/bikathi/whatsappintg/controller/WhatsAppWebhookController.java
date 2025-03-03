@@ -2,30 +2,26 @@ package npc.bikathi.whatsappintg.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import npc.bikathi.whatsappintg.dto.UserResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
+
 @RestController
 @Slf4j
 public class WhatsAppWebhookController {
-//    @PostMapping(value = "/webhook")
-//    public ResponseEntity<String> callbackWebhook(@RequestBody UserResponse userResponse) {
-//        log.info("Message received from user is: {}", userResponse.getResponse());
-//        try {
-//            if(!userResponse.getResponse().isBlank() && userResponse.getResponse().contains("from")) {
-//                ResponseEntity.status(HttpStatus.OK).body(userResponse.getResponse());
-//            } else {
-//                return ResponseEntity.noContent().build();
-//            }
-//        } catch (Exception e) {
-//            log.error("Failed to understand callback data! Cause: {}", e.getMessage());
-//            return ResponseEntity.status(500).body(e.getMessage());
-//        }
-//
-//        return null;
-//    }
+    @PostMapping(value = "/webhook")
+    public void callbackWebhook(HttpServletRequest request) {
+        try {
+            String jsonBody = new String(request.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+            log.info("Message received from user is: {}", jsonBody);
+            // return ResponseEntity.ok(jsonBody);
+        } catch (Exception e) {
+            log.error("Failed to read callback data! Cause: {}", e.getMessage());
+            // return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
 
     @GetMapping(value = "/webhooks")
     public ResponseEntity<Integer> verifyWebhook(
