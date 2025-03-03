@@ -5,10 +5,11 @@ spring:
     allow-bean-definition-overriding: true
 
 server:
-  port: 5300
+  port: ${SERVER_PORT:5300}
 
 # custom props
 api:
   whatsapp:
     api-key: ${WHATSAPP_API_KEY:abcd12342}
-    sender-phone-id: ${SENDER_PHONE_ID:488062677732676}
+    sender-phone-id: ${SENDER_PHONE_ID:abcd12345}
+    callback-validation-token: ${CALLBACK_VALIDATION_TOKEN:abcd12342}
