@@ -1,32 +1,58 @@
 package npc.bikathi.whatsappintg.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import npc.bikathi.whatsappintg.config.PropertiesConfig;
 import npc.bikathi.whatsappintg.dto.WhatsAppCallbackStructure;
+import npc.bikathi.whatsappintg.entity.BroadcastEntry;
+import npc.bikathi.whatsappintg.entity.VehiclePart;
+import npc.bikathi.whatsappintg.service.BroadcastEntryService;
+import npc.bikathi.whatsappintg.util.CommunicationsUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class WhatsAppWebhookController {
     private final PropertiesConfig propertiesConfig;
+    private final BroadcastEntryService broadcastEntryService;
+    private final CommunicationsUtil communicationsUtil;
 
     @PostMapping(value = "/webhooks")
     public void callbackWebhook(HttpServletRequest request) {
         try {
             WhatsAppCallbackStructure jsonBody = new ObjectMapper().readValue(request.getInputStream(), WhatsAppCallbackStructure.class);
-            log.info("Message received from user is: {}", jsonBody);
-            // return ResponseEntity.ok(jsonBody);
+
+            // get to the message object in the callback so that we can analyse the context
+            final WhatsAppCallbackStructure.Entry mainEntry = jsonBody.getEntry().get(0);
+            WhatsAppCallbackStructure.Entry.Change change = !Objects.isNull(mainEntry) ? mainEntry.getChanges().get(0) : null;
+            WhatsAppCallbackStructure.Entry.Change.Value.Message message = !Objects.isNull(change) ? change.getValue().getMessages().get(0) : null;
+
+            if(message != null  && message.getContext() != null) {
+                // the context id will help us get the id of the broadcast sent to the user
+                final String contextId = message.getContext().getId();
+                BroadcastEntry broadcastEntry = broadcastEntryService
+                    .getBroadCastEntry(contextId)
+                .orElseThrow(() -> new EntityNotFoundException("Broadcast context message not found!"));
+
+                // get the part associated with the broadcast message
+                VehiclePart part = broadcastEntry.getVehiclePart();
+
+                // return to PartSultan the response message along with the id of the vehicle part
+                communicationsUtil.returnResponse(part.getExternId(), message.getText().getBody());
+
+            // throw an exception when there is no message entry or the context is not attached
+            } else throw new RuntimeException("No context found in callback!");
+
         } catch (Exception e) {
             log.error("Failed to read callback data! Cause: {}", e.getMessage());
-            // return ResponseEntity.status(500).body(e.getMessage());
         }
     }
 
