@@ -4,6 +4,7 @@ import com.whatsapp.api.domain.messages.ImageMessage;
 import com.whatsapp.api.domain.messages.Message;
 import com.whatsapp.api.domain.messages.TextMessage;
 import com.whatsapp.api.impl.WhatsappBusinessCloudApi;
+import com.whatsapp.api.utils.Formatter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import npc.bikathi.whatsappintg.config.PropertiesConfig;
@@ -26,7 +27,7 @@ public class WhatsAppMessageService implements MessageService {
             toPhoneNumbers.parallelStream().forEach(phoneNumber -> {
                 var imageMessage = new ImageMessage()//
                     .setId(mediaIds.get(0))// media id (uploaded before)
-                .setCaption(messageString);
+                .setCaption(messageString + "\n" + Formatter.bold("Kindly tag this message (swipe right over it) when responding to this inquiry"));
 
                 var message = Message.MessageBuilder.builder()//
                     .setTo(phoneNumber)//
@@ -65,8 +66,10 @@ public class WhatsAppMessageService implements MessageService {
             .setTo(phoneNumber)
             .buildTextMessage(
                 new TextMessage()
-                    .setBody(messageString)
+                    .setBody(messageString + "\n" + Formatter.bold("Kindly tag this message (swipe right over it) when responding to this inquiry"))
                     .setPreviewUrl(false)
             );
+
+
     }
 }
