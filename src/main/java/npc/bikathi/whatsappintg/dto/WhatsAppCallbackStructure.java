@@ -34,6 +34,7 @@ public class WhatsAppCallbackStructure {
             public static class Value {
                 @JsonProperty("messaging_product")
                 private String messagingProduct;
+
                 private Metadata metadata;
                 private List<Contact> contacts;
                 private List<Message> messages;
@@ -55,7 +56,7 @@ public class WhatsAppCallbackStructure {
                 public static class Contact {
                     private Profile profile;
 
-                    @JsonProperty("phone_number_id")
+                    @JsonProperty("wa_id")
                     private String waId;
 
                     @Data
