@@ -54,6 +54,8 @@ public class WhatsAppCallbackStructure {
                 @NoArgsConstructor
                 public static class Contact {
                     private Profile profile;
+
+                    @JsonProperty("phone_number_id")
                     private String waId;
 
                     @Data
