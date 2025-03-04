@@ -1,9 +1,11 @@
 package npc.bikathi.whatsappintg.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import npc.bikathi.whatsappintg.config.PropertiesConfig;
+import npc.bikathi.whatsappintg.dto.WhatsAppCallbackStructure;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +21,7 @@ public class WhatsAppWebhookController {
     @PostMapping(value = "/webhooks")
     public void callbackWebhook(HttpServletRequest request) {
         try {
-            String jsonBody = new String(request.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+            WhatsAppCallbackStructure jsonBody = new ObjectMapper().readValue(request.getInputStream(), WhatsAppCallbackStructure.class);
             log.info("Message received from user is: {}", jsonBody);
             // return ResponseEntity.ok(jsonBody);
         } catch (Exception e) {
