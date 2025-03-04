@@ -1,5 +1,6 @@
 package npc.bikathi.whatsappintg.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,7 @@ public class WhatsAppCallbackStructure {
             @AllArgsConstructor
             @NoArgsConstructor
             public static class Value {
+                @JsonProperty("messaging_product")
                 private String messagingProduct;
                 private Metadata metadata;
                 private List<Contact> contacts;
@@ -40,7 +42,10 @@ public class WhatsAppCallbackStructure {
                 @AllArgsConstructor
                 @NoArgsConstructor
                 public static class Metadata {
+                    @JsonProperty("display_phone_number")
                     private String displayPhoneNumber;
+
+                    @JsonProperty("phone_number_id")
                     private String phoneNumberId;
                 }
 
