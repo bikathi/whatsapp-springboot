@@ -43,6 +43,7 @@ jobs:
             docker rm whatsappintg || true
             docker run \
               -d \
+              --network whatsappintg-mysql-network \
               --restart unless-stopped \
               --name whatsappintg \
               -p 5300:5300 \
