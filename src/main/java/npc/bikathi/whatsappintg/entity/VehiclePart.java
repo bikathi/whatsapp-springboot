@@ -27,8 +27,4 @@ public class VehiclePart {
 
     @OneToMany(mappedBy = "vehiclePart")
     private List<BroadcastEntry> broadcastEntry = new ArrayList<>();
-
-    public void addBroadcastEntry(@NotNull List<BroadcastEntry> broadcastEntry) {
-        this.broadcastEntry.addAll(broadcastEntry);
-    }
 }

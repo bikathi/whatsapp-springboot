@@ -41,6 +41,7 @@ public class WhatsAppMessagingController {
             // store the details about the vehicle part
             VehiclePart vehiclePart =  VehiclePart.builder()
                 .externPartId(vehiclePartId)
+                .broadcastEntry(new ArrayList<>())
             .build();
             VehiclePart savedVehiclePart = vehiclePartService.saveVehiclePart(vehiclePart);
 

@@ -18,7 +18,6 @@ import npc.bikathi.whatsappintg.entity.BroadcastEntry;
 import npc.bikathi.whatsappintg.entity.VehiclePart;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -78,7 +77,7 @@ public class WhatsAppMessageService implements IMessageService {
         List<BroadcastEntry> savedBroadcastEntries = broadcastEntryService.saveBroadcastEntries(broadcastEntries);
 
         // update the vehiclePart with the broadcast entries
-        vehiclePart.addBroadcastEntry(savedBroadcastEntries);
+        vehiclePart.getBroadcastEntry().addAll(savedBroadcastEntries);
         vehiclePartService.saveVehiclePart(vehiclePart);
     }
 
@@ -86,7 +85,7 @@ public class WhatsAppMessageService implements IMessageService {
     public void sendMessageWithoutAttachment(@NotEmpty List<String> toPhoneNumbers, @NotNull String messageString, @NotNull VehiclePart vehiclePart) {
         List<String> messageIds = toPhoneNumbers.parallelStream().map(phoneNumber -> {
             var message = getTextMessageMessage(
-                messageString + "\n" + Formatter.bold("Kindly tag this message (swipe right over it) when responding to this inquiry"),
+                messageString,
                 phoneNumber
             );
             MessageResponse response = whatsappBusinessCloudApi.sendMessage(propertiesConfig.getSenderPhoneId(), message);
@@ -100,7 +99,7 @@ public class WhatsAppMessageService implements IMessageService {
         List<BroadcastEntry> savedBroadcastEntries = broadcastEntryService.saveBroadcastEntries(broadcastEntries);
 
         // update the vehiclePart with the broadcast entries
-        vehiclePart.addBroadcastEntry(savedBroadcastEntries);
+        vehiclePart.getBroadcastEntry().addAll(savedBroadcastEntries);
         vehiclePartService.saveVehiclePart(vehiclePart);
     }
 
@@ -109,10 +108,8 @@ public class WhatsAppMessageService implements IMessageService {
             .setTo(phoneNumber)
             .buildTextMessage(
                 new TextMessage()
-                    .setBody(messageString + "\n" + Formatter.bold("Kindly tag this message (swipe right over it) when responding to this inquiry"))
+                    .setBody(messageString + "\n\n" + Formatter.bold("Kindly tag this message (swipe right over it) when responding to this inquiry"))
                     .setPreviewUrl(false)
             );
-
-
     }
 }
