@@ -1,8 +1,21 @@
 spring:
   application:
   name: whatsapp-integration
-  main:
-    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:mysql://localhost:3310/whatsapp_integration?allowPublicKeyRetrieval=true&useSSL=true
+    username: ${PRIMARY_DB_USERNAME:root}
+    password: ${PRIMARY_DB_PASSWORD:rootUser@123}
+    drive-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    # database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+    database: mysql
+    open-in-view: false
 
 server:
   port: ${SERVER_PORT:5300}
