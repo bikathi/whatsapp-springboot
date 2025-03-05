@@ -2,7 +2,7 @@ spring:
   application:
   name: whatsapp-integration
   datasource:
-    url: jdbc:mysql://localhost:3310/whatsapp_integration?allowPublicKeyRetrieval=true&useSSL=true
+    url: jdbc:mysql://172.17.0.1:3310/whatsapp_integration?allowPublicKeyRetrieval=true&useSSL=true
     username: ${PRIMARY_DB_USERNAME:root}
     password: ${PRIMARY_DB_PASSWORD:rootUser@123}
     drive-class-name: com.mysql.cj.jdbc.Driver
