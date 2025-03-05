@@ -1,5 +1,5 @@
-package npc.bikathi.whatsappintg.types;
+package npc.bikathi.whatsappintg.defs;
 
-public interface MediaHandlingService {
+public interface IMediaHandlingService {
     String uploadFile(byte[] fileContent, Object fileType, String fileName);
 }

@@ -5,7 +5,10 @@ import npc.bikathi.whatsappintg.entity.VehiclePart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface IVehiclePartRepository extends JpaRepository<VehiclePart, Long> {
-    void deleteByExternId(@NotNull String externId);
+    void deleteByExternPartId(@NotNull String externId);
+    Optional<VehiclePart> findByExternPartId(@NotNull String externId);
 }
