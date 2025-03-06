@@ -46,7 +46,7 @@ public class WhatsAppWebhookController {
                 VehiclePart part = broadcastEntry.getVehiclePart();
 
                 // return to PartSultan the response message along with the id of the vehicle part
-                communicationsUtil.returnResponse(part.getExternPartId(), message.getText().getBody());
+                communicationsUtil.returnResponse(part.getExternPartId(), message.getFrom(), message.getText().getBody());
 
             // throw an exception when there is no message entry or the context is not attached
             } else throw new RuntimeException("No message info or context info found in callback!");
