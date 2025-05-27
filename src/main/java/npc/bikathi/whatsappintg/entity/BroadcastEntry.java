@@ -20,4 +20,8 @@ public class BroadcastEntry {
     @ManyToOne
     @JoinColumn(name = "fk_vehicle_part_id", nullable = false)
     private VehiclePart vehiclePart;
+
+    @Lob
+    @Column(name = "sent_message", columnDefinition = "BLOB")
+    private String broadcastMessage;
 }
