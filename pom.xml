@@ -68,6 +68,20 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+
+		<!--  ChatGPT simple integration SDK  -->
+		<dependency>
+			<groupId>io.github.lambdua</groupId>
+			<artifactId>service</artifactId>
+			<version>0.22.3</version>
+		</dependency>
+
+		<!-- GSON for advanced JSON-POJO mapping -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.10.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
