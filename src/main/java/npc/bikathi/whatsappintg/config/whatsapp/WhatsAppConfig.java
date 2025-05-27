@@ -1,4 +1,4 @@
-package npc.bikathi.whatsappintg.config;
+package npc.bikathi.whatsappintg.config.whatsapp;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @Scope(value = "singleton")
 @ConfigurationProperties(prefix = "api.whatsapp")
-public class PropertiesConfig {
+public class WhatsAppConfig {
     private String apiKey;
     private String senderPhoneId;
     private String callbackValidationToken;

@@ -9,8 +9,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommunicationsUtil {
     @Async(value = "asyncTaskExecutor")
-    public final void returnResponse(@NotNull String externPartId, @NotNull String fromPhoneId, @NotNull String message) {
+    public final void returnResponse(
+        @NotNull String externPartId,
+        @NotNull String fromPhoneId,
+        @NotNull String message,
+        @NotNull String partCost
+    ) {
         // TODO: implement some REST call here
-        log.info("Congrats! Message to be sent to Part Sultan! ExternPartId: {}, From phoneId: {}, Message: {}", externPartId, fromPhoneId, message);
+        log.info("Congrats! Message to be sent to Part Sultan! ExternPartId: {}, From phoneId: {}, Message: {}, With cost: {}", externPartId, fromPhoneId, message, partCost);
     }
 }

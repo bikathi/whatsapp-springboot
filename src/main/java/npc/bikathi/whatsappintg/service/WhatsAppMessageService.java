@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import npc.bikathi.whatsappintg.config.PropertiesConfig;
+import npc.bikathi.whatsappintg.config.whatsapp.WhatsAppConfig;
 import npc.bikathi.whatsappintg.defs.IBroadcastEntryService;
 import npc.bikathi.whatsappintg.defs.IMessageService;
 import npc.bikathi.whatsappintg.defs.IVehiclePartService;
@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WhatsAppMessageService implements IMessageService {
     private final WhatsappBusinessCloudApi whatsappBusinessCloudApi;
-    private final PropertiesConfig propertiesConfig;
+    private final WhatsAppConfig whatsAppConfig;
     private final IBroadcastEntryService broadcastEntryService;
     private final IVehiclePartService vehiclePartService;
 
@@ -48,11 +48,10 @@ public class WhatsAppMessageService implements IMessageService {
                     .setTo(phoneNumber)
                 .buildImageMessage(imageMessage);
 
-                MessageResponse response = whatsappBusinessCloudApi.sendMessage(propertiesConfig.getSenderPhoneId(), message);
+                MessageResponse response = whatsappBusinessCloudApi.sendMessage(whatsAppConfig.getSenderPhoneId(), message);
                 return response.messages().get(0).id();
             }).toList();
         } else {
-
             messageIds = toPhoneNumbers.parallelStream().map(phoneNumber -> {
                 // send the images first (without a caption), then send the text message last
                 for(String id: mediaIds) {
@@ -60,19 +59,23 @@ public class WhatsAppMessageService implements IMessageService {
                     var message = Message.MessageBuilder.builder()
                         .setTo(phoneNumber)
                     .buildImageMessage(imageMessage);
-                    whatsappBusinessCloudApi.sendMessage(propertiesConfig.getSenderPhoneId(), message);
+                    whatsappBusinessCloudApi.sendMessage(whatsAppConfig.getSenderPhoneId(), message);
                 }
 
                 // then send the message last
                 var message = getTextMessageMessage(messageString, phoneNumber);
-                MessageResponse response = whatsappBusinessCloudApi.sendMessage(propertiesConfig.getSenderPhoneId(), message);
+                MessageResponse response = whatsappBusinessCloudApi.sendMessage(whatsAppConfig.getSenderPhoneId(), message);
                 return response.messages().get(0).id();
             }).toList();
         }
 
         // save the broadcast entries
         List<BroadcastEntry> broadcastEntries = messageIds.parallelStream().map(id ->
-            BroadcastEntry.builder().id(id).vehiclePart(vehiclePart).build()
+            BroadcastEntry.builder()
+                .id(id)
+                .vehiclePart(vehiclePart)
+                .broadcastMessage(messageString)
+            .build()
         ).toList();
         List<BroadcastEntry> savedBroadcastEntries = broadcastEntryService.saveBroadcastEntries(broadcastEntries);
 
@@ -88,13 +91,18 @@ public class WhatsAppMessageService implements IMessageService {
                 messageString,
                 phoneNumber
             );
-            MessageResponse response = whatsappBusinessCloudApi.sendMessage(propertiesConfig.getSenderPhoneId(), message);
+            MessageResponse response = whatsappBusinessCloudApi.sendMessage(whatsAppConfig.getSenderPhoneId(), message);
             return response.messages().get(0).id();
         }).toList();
 
         // save the broadcast entries
         List<BroadcastEntry> broadcastEntries = messageIds.parallelStream().map(id ->
-            BroadcastEntry.builder().id(id).vehiclePart(vehiclePart).build()
+            BroadcastEntry
+                .builder()
+                .id(id)
+                .vehiclePart(vehiclePart)
+                .broadcastMessage(messageString)
+            .build()
         ).toList();
         List<BroadcastEntry> savedBroadcastEntries = broadcastEntryService.saveBroadcastEntries(broadcastEntries);
 
